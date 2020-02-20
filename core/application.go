@@ -1,4 +1,4 @@
-package server
+package core
 
 import (
 	"html/template"
@@ -66,7 +66,7 @@ func (app *Application) LoadHTMLGlob(pattern string) {
 	app.templates = template.Must(template.New("").Funcs(app.funcMap).ParseGlob(pattern))
 }
 
-// router group for app
+// router group for core
 type RouterGroup struct {
 	prefix      string
 	middlewares []HandlerFunc
