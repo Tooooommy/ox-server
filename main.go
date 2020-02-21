@@ -1,5 +1,7 @@
 package main
 
+import "net"
+
 // 一个类似gin的框架
 // 路由使用前缀树
 func main() {
@@ -10,6 +12,7 @@ func main() {
 	//	})
 	//})
 	//app.Run(":8080")
+	net.Dial()
 }
 
 //func Upgrade(writer http.ResponseWriter, request *http.Request) error {
