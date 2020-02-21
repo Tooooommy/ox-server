@@ -1,6 +1,6 @@
 package main
 
-import "encoding/json"
+import logger "ox-web/log"
 
 // 一个类似gin的框架
 // 路由使用前缀树
@@ -12,6 +12,6 @@ func main() {
 	//	})
 	//})
 	//app.Run(":8080")
-	json.Marshal()
 
+	_ = logger.INFO().Str("greate", "spider man").Send()
 }

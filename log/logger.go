@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"io"
@@ -17,18 +17,49 @@ import (
 	fmt.Println(string(bs))
 */
 
-type Entry struct {
+type Level uint8
+
+const (
+	DebugLevel Level = iota
+	InfoLevel
+	WarnLevel
+	ErrorLevel
+	FatalLevel
+	PanicLevel
+	NoLevel
+	Disabled
+)
+
+func (l Level) String() string {
+	switch l {
+	case DebugLevel:
+		return "debug"
+	case InfoLevel:
+		return "info"
+	case WarnLevel:
+		return "warn"
+	case ErrorLevel:
+		return "error"
+	case FatalLevel:
+		return "fatal"
+	case PanicLevel:
+		return "panic"
+	case NoLevel:
+		return ""
+	}
+	return ""
 }
+
 type Logger struct {
-	mu     *sync.Mutex
-	out    io.Writer
-	prefix string
+	mu    *sync.Mutex
+	out   io.Writer
+	level Level
 }
 
-var std = New(os.Stdin, "")
+var std = New(os.Stdout)
 
-func New(out io.Writer, prefix string) *Logger {
-	return &Logger{out: out, prefix: prefix, mu: new(sync.Mutex)}
+func New(out io.Writer) *Logger {
+	return &Logger{out: out, mu: new(sync.Mutex)}
 }
 
 func (l *Logger) SetOutput(out io.Writer) {
@@ -37,47 +68,57 @@ func (l *Logger) SetOutput(out io.Writer) {
 	l.out = out
 }
 
-func (l *Logger) output(format string, obj ...interface{}) {
+func (l *Logger) newEntry() *Entry {
+	return newEntry(l.out, l.level)
+}
+
+func (l *Logger) DEBUG() *Entry {
+	return l.newEntry()
 
 }
 
-func (l *Logger) DEBUG() {
+func (l *Logger) INFO() *Entry {
+	return l.newEntry()
 
 }
 
-func (l *Logger) INFO() {
+func (l *Logger) WARN() *Entry {
+	return l.newEntry()
+}
+
+func (l *Logger) ERROR() *Entry {
+	return l.newEntry()
+}
+
+func (l *Logger) FATAL() *Entry {
+	return l.newEntry()
+}
+
+func (l *Logger) Panic() *Entry {
+	return l.newEntry()
+}
+
+func DEBUG() *Entry {
+	return std.DEBUG()
+}
+
+func INFO() *Entry {
+	return std.INFO()
+}
+
+func WARN() *Entry {
+	return std.WARN()
 
 }
 
-func (l *Logger) WARNING() {
-
+func ERROR() *Entry {
+	return std.ERROR()
 }
 
-func (l *Logger) ERROR() {
-
+func FATAL() *Entry {
+	return std.FATAL()
 }
 
-func (l *Logger) FATAL() {
-
-}
-
-func DEBUG() {
-	std.DEBUG()
-}
-
-func INFO() {
-	std.INFO()
-}
-
-func WARNING() {
-	std.WARNING()
-
-}
-
-func ERROR() {
-	std.ERROR()
-}
-
-func FATAL() {
-	std.FATAL()
+func Panic() *Entry {
+	return std.Panic()
 }
