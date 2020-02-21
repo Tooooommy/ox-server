@@ -16,6 +16,7 @@ import (
 	bs = append(bs, '}')
 	fmt.Println(string(bs))
 */
+// todo: 替换专义字符
 
 type Level uint8
 
