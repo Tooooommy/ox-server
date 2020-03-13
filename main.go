@@ -1,26 +1,28 @@
 package main
 
 import (
-	"ox-web/core"
+	"log"
+	"ox-web/web"
+	"ox-web/websocket"
 )
 
 // 一个类似gin的框架
 // 路由使用前缀树
 func main() {
-	app := core.New()
-	app.GET("/", func(context *core.Context) {
-		context.JSON(200, core.M{
-			"message": "go",
-		})
+	app := ox.New()
+	app.GET("/", func(ctx *ox.Context) {
+		conn, err := websocket.Upgrade(ctx.Writer, ctx.Req)
+		if err != nil {
+			log.Println(err)
+		}
+		if err := conn.WriteMessage(websocket.TextMessage, []byte("你好")); err != nil {
+			log.Println(err)
+		}
+		for {
+			fin, op, body, err := conn.Read()
+			log.Println(fin, op, body, err)
+		}
 	})
 	_ = app.Run(":8080")
 }
 
-//func Upgrade(writer http.ResponseWriter, request *http.Request) error {
-//	if request.Method != http.MethodGet {
-//		return errors.New("bad request, method not allowed")
-//	}
-//	if request.Header.Get("Sec-Websocket-Version") != 13 {
-//
-//	}
-//}

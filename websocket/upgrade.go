@@ -7,7 +7,6 @@ import (
 	"errors"
 	"io"
 	"net/http"
-	"strings"
 )
 
 var (
@@ -56,10 +55,10 @@ func verifyRequest(req *http.Request) (int, error) {
 	if req.Header.Get("Sec-Websocket-Version") != "13" {
 		return http.StatusBadRequest, ErrBadWebsocketVersion
 	}
-	if strings.ToLower(req.Header.Get("Upgrade")) != "websocket" {
+	if req.Header.Get("Upgrade") != "websocket" {
 		return http.StatusUpgradeRequired, ErrNotWebsocket
 	}
-	if strings.Contains(strings.ToLower(req.Header.Get("Connection")), "upgrade") {
+	if req.Header.Get("Connection") != "Upgrade" {
 		return http.StatusUpgradeRequired, ErrNotWebsocket
 	}
 	if req.Header.Get("Sec-WebSocket-Key") == "" {

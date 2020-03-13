@@ -1,4 +1,4 @@
-package core
+package ox
 
 import (
 	"encoding/json"
